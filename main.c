@@ -1,92 +1,32 @@
 #include <stdio.h>
 
 /*
-  count characters in input; 1st version
+  Count digits, white space, others
 */
 
-// int main(){
-//   long nc;
+int main()
+{
+  int c, i, nwhite, nother;
+  int ndigit[10];
+  nwhite = nother = 0;
 
-//   nc = 0;
-//   while(getchar() != EOF){
-//     ++nc;
-//     printf("%ld\n", nc);
-//   }
+  for (i = 0; i < 10; ++i)
+    ndigit[i] = 0;
 
-//   return 0;
-// }
+  while ((c = getchar()) != EOF)
+    if (c >= '0' && c <= '9')
+      ++ndigit[c - '0'];
+    else if (c == ' ' || c == '\n' || c == '\t')
+      ++nwhite;
+    else
+      ++nother;
 
-/*
-  count characters in input; 2nd version
-*/
+  printf("digits =");
+  for (i = 0; i < 10; ++i)
+    printf(" %d", ndigit[i]);
 
-// int main(){
-//   double nc;
-
-//   for(nc = 0; getchar() != EOF; ++nc){
-//     printf("%.0f\n", nc);
-//   }
-
-//   return 0;
-// }
-
-/*
-  Line counting
-*/
-
-// int main(){
-//   int c, nl;
-
-//   nl = 0;
-
-//   while((c = getchar()) != EOF){
-//     if(c == '\n'){
-//       ++nl;
-//     }
-//   }
-//   printf("%d\n",nl);
-
-//   return 0;
-// }
-
-
-// int main(){
-//   int blanks = 0;
-//   int tabs = 0;
-//   int newlines = 0;
-//   int character = 0;
-
-//   while((character = getchar()) != EOF){
-//     printf("%d",getchar());
-//     if(character == '\t') tabs++;
-
-//     if(character == ' ') blanks++;
-
-//     if(character == '\n') newlines++;
-//   }
-
-//   printf("tabs => %d - blanks => %d - newlines => %d", tabs, blanks, newlines);
-
-//   return 0;
-// }
-
-int main(){
-  int currentWord = 0;
-  int previousWord = 0;
-  char word[100] = "";
-  int blanks = 0;
-  int i = 0;
-
-  while((currentWord = getchar()) != EOF){
-    if(currentWord == ' ' && previousWord == ' ') continue;
-    
-    if (i < 99) word[i++] = currentWord;
-    previousWord = currentWord;
-
-  }
-  
-  word[i] = '\0';
-  printf("%s", word);
+  printf(", white space = %d, other = %d\n",
+         nwhite, nother);
 
   return 0;
 }
