@@ -1,32 +1,57 @@
 #include <stdio.h>
-
 /*
-  Count digits, white space, others
+  print the longest input line
 */
 
-int main()
-{
-  int c, i, nwhite, nother;
-  int ndigit[10];
-  nwhite = nother = 0;
+int getline(char line[], int maxline);
+void copy(char to[], char from[]);
+const int MAXLINE = 1000;
 
-  for (i = 0; i < 10; ++i)
-    ndigit[i] = 0;
+int main(){
+  int len;
+  int max = 0;
+  char line[MAXLINE];
+  char longest[MAXLINE];
 
-  while ((c = getchar()) != EOF)
-    if (c >= '0' && c <= '9')
-      ++ndigit[c - '0'];
-    else if (c == ' ' || c == '\n' || c == '\t')
-      ++nwhite;
-    else
-      ++nother;
+  while((len = getline(line, MAXLINE)) > 0){
+    if(len > max) {
+      copy(longest, line);
+    }
+  }
 
-  printf("digits =");
-  for (i = 0; i < 10; ++i)
-    printf(" %d", ndigit[i]);
-
-  printf(", white space = %d, other = %d\n",
-         nwhite, nother);
+  if(max > 0){
+    printf("%s", longest);
+  }
 
   return 0;
+}
+
+/* getline: read a line into s, return length */
+int getline(char s[], int lim){
+  int c, i;
+
+  for(i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i ){
+    s[i] = c;
+  }
+
+  if(c == '\n'){
+    s[i] = c;
+    ++i;
+  }
+
+  s[i] = '\0';
+  return i;
+}
+
+/*
+  copy: copy "from" into "to"; assume to is big enough
+*/
+
+void copy(char to[], char from[]){
+  int i;
+
+  i = 0;
+  while((to[i] = from[i]) != '\0'){
+    ++i;
+  }
 }
