@@ -12,8 +12,8 @@ int main(){
   int option = 0;
 
   printf("Select to convert: \n");
-  printf("1.Farenheit to celcius\n");
-  printf("2.Celcius to Farenheit\n");
+  printf("1.Farenheit to celsius\n");
+  printf("2.Celsius to Farenheit\n");
   scanf("%d",&option);
 
   switch(option){
@@ -21,15 +21,18 @@ int main(){
       printf("1.Enter the degrees in Farenheit\n");
       scanf("%lf",&g_fah);
       g_cel = fah_to_cel(g_fah);
+      break;
     case 2:
-      printf("1.Enter the degrees in celcius\n");
+      printf("1.Enter the degrees in celsius\n");
       scanf("%lf",&g_cel);
       g_fah = cel_to_fah(g_cel);
+      break;
     default:
-      printf("Wrong option"); 
+      printf("Wrong option");
+      break; 
   }
 
-  printf("Degrees Fahrenheit => %.2lf : Degrees Celcius => %.2lf", g_fah,g_cel);
+  printf("Degrees Fahrenheit => %.2lf : Degrees Celsius => %.2lf", g_fah,g_cel);
 }
 
 double fah_to_cel(double g_fah){
