@@ -3,53 +3,44 @@
 #include <string.h>
 #include <stdbool.h>
 
+int word_count(char *string, char *word);
+
 int main(void)
-{
-  char str_arr[] = "mundo mundo";
-  char word[] = "mundo";
-
-  int len = strlen(str_arr);
-  int len_word = strlen(word);
-  int total_corrurrence = 0;
+{ 
+  char s[] = "It is in this string once.";
+  char w[] = "It";
+  int result = word_count(s, w);
+  printf("Result: %d\n", result);
   
-  bool has_occurence = false; 
-  int index = 0;
-
-  while(index < len && has_occurence){
-    for(int i = 0; i < len_word; i++){
-      for(int y = index; y < len; y++){
-        if(str_arr[y] == ' ' && has_occurence){
-          goto fin;
-        }
-
-        if(str_arr[y] == ' ' && !has_occurence){
-          continue;
-        }
-
-        if((has_occurence && str_arr[y] != word[i])){
-          has_occurence = false;
-          goto fin;
-        }
-
-        if(str_arr[y] == word[i]){
-          has_occurence = true;
-          index = y + 1;
-          break;
-        }
-
-        goto fin;
-      }
-    }
-    total_corrurrence++;
-  }
-
-  fin:
-  printf("Total corrunces => %d\n", total_corrurrence);
-
-  if(total_corrurrence <= 0)
-    printf("Sorry, the word does not exist in the string!");
-  else
-    printf("Total concurrences: %d", total_corrurrence);
+  char s2[] = "This is in in in the word.";
+  char w2[] = "in";
+  int result2 = word_count(s2, w2);
+  printf("Result: %d\n", result2);
 
   return 0;
+}
+
+int word_count(char *string, char *word)
+{
+  int slen = strlen(string);
+  int wlen = strlen(word);
+  int end = slen - wlen + 1;
+  int count = 0;
+
+  for(int i = 0; i < end; i++)
+  { 
+    bool word_found = true;
+    int j = 0;
+    for(j; j < wlen; j++)
+    {
+      if(word[j] != string[i + j])
+      {
+        word_found = false;
+        break;  
+      }
+    }
+    if(word_found) count++;
+  }
+
+  return count;
 }
