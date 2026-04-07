@@ -1,0 +1,3 @@
+holaestoy escribiendo desde terminal
+y voy a ingresar mas datos
+en el archivo .txt
