@@ -1,0 +1,1 @@
+contanten from file.txt
