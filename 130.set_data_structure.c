@@ -15,6 +15,9 @@ Set *set_union(Set *setA, Set *setB);
 Set *set_insersection(Set *setA, Set *setB);
 Set *set_difference(Set *setA, Set *setB);
 bool is_subset(Set *setA, Set *setB);
+bool is_equality(Set *setA, Set *setB);
+bool is_member(Set *set, int value);
+
 
 int main()
 {
@@ -62,6 +65,38 @@ int main()
   else
     printf("A is NOT a subset of B.\n");
 
+  if(is_subset(setF, setB))
+    printf("F is a subset of B.\n");
+  else
+    printf("F is NOT a subset of B.\n");
+
+  if(is_equality(setF, setB))
+    printf("F is equal to B.\n");
+  else
+    printf("F is not equal to B.\n");
+
+  Set *setG = init();
+  insert(setG, 9);
+  insert(setG, 10);
+  printf("Set G: ");
+  print_set(setG);
+
+  if(is_equality(setF, setG))
+    printf("F is equal to G.\n");
+  else
+    printf("F is not equal to G.\n");
+
+  if(is_member(setF, 9))
+    printf("9 is in set F.\n");
+  else
+    printf("9 is NOT in set F.\n");
+  
+  if(is_member(setF, 11))
+    printf("11 is in set F.\n");
+  else
+    printf("11 is NOT in set F.\n");
+
+
   return 0;
 }
 
@@ -80,13 +115,7 @@ bool is_empty(Set *set)
 
 void insert(Set *set, int member)
 {
-  bool in_set = false;
-  
-  for (int i = 0; i < set->length; i++)
-    if(set->members[i] == member)
-      in_set = true;
-  
-  if(!in_set)
+  if(!is_member(set, member))
   {
     set->members = realloc(set->members, sizeof(int) * (set->length + 1));
     set->members[set->length] = member;
@@ -120,9 +149,8 @@ Set *set_insersection(Set *setA, Set *setB)
   Set *new = init();  
 
   for(int i = 0; i < setA->length; i++)
-    for(int j = 0; j < setB->length; j++)
-      if(setA->members[i] == setB->members[j])
-        insert(new, setA->members[i]);
+    if(is_member(setB, setA->members[i]))
+      insert(new, setA->members[i]);
 
   return new;
 }
@@ -132,16 +160,8 @@ Set *set_difference(Set *setA, Set *setB)
    Set *new = init();  
 
   for(int i = 0; i < setA->length; i++)
-  {
-    bool inB = false;
-
-    for(int j = 0; j < setB->length; j++)
-      if(setA->members[i] == setB->members[j])
-        inB = true;
-
-    if(!inB) insert(new, setA->members[i]);
-
-  }
+    if(!is_member(setB, setA->members[i])) 
+      insert(new, setA->members[i]);
 
   return new;
 }
@@ -149,15 +169,22 @@ Set *set_difference(Set *setA, Set *setB)
 bool is_subset(Set *setA, Set *setB)
 {
   for(int i = 0; i < setA->length; i++)
-  {
-    bool inB = false;
-    
-    for(int j = 0; j < setB->length; j++)
-      if(setA->members[i] == setB->members[i])
-        inB = true;
-    
-    if(!inB) return false;
-  }
+    if(!is_member(setB, setA->members[i])) 
+      return false;
 
   return true;
+}
+
+bool is_equality(Set *setA, Set *setB)
+{
+  if(setA->length != setB->length) return false;
+  return is_subset(setA, setA);
+}
+
+bool is_member(Set *set, int value)
+{
+  for(int i = 0; i < set->length; i++)
+    if(set->members[i] == value) return true;
+
+  return false;
 }
