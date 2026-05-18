@@ -1,0 +1,6 @@
+#ifndef SOCKETUTIL_SOCKETUTIL_H
+#define SOCKETUTIL_SOCKETUTIL_H
+
+void hello(void);
+
+#endif //SOCKETUTIL_SOCKETUTIL_H
