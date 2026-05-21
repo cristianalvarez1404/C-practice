@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <stdarg.h>
@@ -44,7 +45,7 @@ int main(int argc, char **argv)
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         err_n_die("Error while creating the socket!");
 
-    bzero(&servaddr, sizeof(servaddr));
+    bzero(&servaddr, sizeof(struct sockaddr_in));
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(SERVER_PORT);
 
