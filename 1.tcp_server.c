@@ -27,12 +27,17 @@ int main(int argc, char **argv)
     for(;;){
         struct socketaddr_in addr;
         socklen_t addr_len;
+        char client_address[MAXLINE + 1];
 
         //accepts blocks util an incoming connection arrives
         //it returns a "file descriptor" to the connection
         printf("waiting for a connection on port %d\n", SERVER_PORT);
         fflush(stdout);
-        connfd = accept(listenfd, (SA *) NULL, NULL);
+        connfd = accept(listenfd, (SA *) &addr, &addr_len);
+
+        inet_ntop(AF_INET, &addr, client_address, MAXLINE);
+        printf("Clien connection: %s\n", client_address);
+        
 
         memset(recvline, 0, MAXLINE);
 
@@ -52,6 +57,7 @@ int main(int argc, char **argv)
         snprintf((char*)buff, sizeof(buff), "HTTP/1.0 200 OK\r\n\r\nHello");
 
         write(connfd, (char*)buff, strlen((char *)buff));
+        
         close(connfd);
     }
 }
