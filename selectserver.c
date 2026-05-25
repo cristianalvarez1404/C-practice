@@ -28,18 +28,40 @@ int main(int argc, char **argv)
     fd_set current_sockets, ready_sockets;
 
     //initialize my current set
-    
+    FD_ZERO(&current_sockets);
+    FD_SET(server_socket, &current_sockets);
 
     while(true){
-        printf("Waiting for connections...\n");
+        //because select is destructive
+        ready_sockets = current_sockets;
+
+        if(select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0){
+            perror("select error");
+            exit(EXIT_FAILURE);
+        }
+
+        for(int i = 0; i < FD_SETSIZE; i++) {
+            if(FD_ISSET(i, &ready_sockets)){
+                if(i == server_socket){
+                    //this is a new connection
+                    int client_socket = accept_new_connection(server_socket);
+                    FD_SET(client_socket, &current_sockets);
+                } else {
+                    handle_connection(i);
+                    FD_CLR(i, &current_sockets);
+                }
+            }
+        }
+
+        //printf("Waiting for connections...\n");
         //wait for, and eventually accept an incoming connection
-        int client_socket = accept_new_connection(server_socket);
+        //int client_socket = accept_new_connection(server_socket);
 
         //do whatever we do with connections.
-        handle_connection(client_socket);
+        //handle_connection(client_socket);
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 int setup_server(short port, int backlog)
