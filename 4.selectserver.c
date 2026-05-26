@@ -25,27 +25,34 @@ int main(int argc, char **argv)
 {
     int server_socket = setup_server(SERVERPORT, SERVER_BACKLOG);
     
+    int max_socket_so_far = 0;
     fd_set current_sockets, ready_sockets;
 
     //initialize my current set
     FD_ZERO(&current_sockets);
     FD_SET(server_socket, &current_sockets);
+    max_socket_so_far = server_socket;
+
+    printf("FD_SETSIZE=%d\n", FD_SETSIZE);
 
     while(true){
         //because select is destructive
         ready_sockets = current_sockets;
 
-        if(select(FD_SETSIZE, &ready_sockets, NULL, NULL, NULL) < 0){
+        if(select(max_socket_so_far, &ready_sockets, NULL, NULL, NULL) < 0){
             perror("select error");
             exit(EXIT_FAILURE);
         }
 
-        for(int i = 0; i < FD_SETSIZE; i++) {
+        for(int i = 0; i <= max_socket_so_far; i++) {
             if(FD_ISSET(i, &ready_sockets)){
                 if(i == server_socket){
                     //this is a new connection
                     int client_socket = accept_new_connection(server_socket);
                     FD_SET(client_socket, &current_sockets);
+                    if(client_socket > max_socket_so_far){
+                        max_socket_so_far = client_socket;
+                    }
                 } else {
                     handle_connection(i);
                     FD_CLR(i, &current_sockets);
