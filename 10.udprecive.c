@@ -36,9 +36,21 @@ int main(int argc, char **argv)
   int result = bind(udp_rx_socket, (struct sockaddr *)&my_addr, sizeof(my_addr));
   check(result, "Could not bind socket to address.");
 
+  struct timeval timeout;
+  timeout.tv_sec = 5;
+  timeout.tv_usec = 0;
+
+  check(setsockopt(udp_rx_socket, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)), "setting timeout failed");
+
   socklen_t address_length = sizeof(peer_addr);
   int bytes_received = recvfrom(udp_rx_socket, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&peer_addr, &address_length);
-  check(bytes_received, "Sorry, recvfrom failed.");
+
+  if(bytes_received == SOCKETERROR && errno == EWOULDBLOCK){
+    printf("Our socket timed out!\n");
+    return EXIT_FAILURE;
+  } else {
+    check(bytes_received, "Sorry, recvfrom failed.");
+  }
 
   printf("Received a packet from %s:%d -- Message = %s\n", inet_ntoa(peer_addr.sin_addr), ntohs(peer_addr.sin_port), buffer);
 
