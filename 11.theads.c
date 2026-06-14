@@ -32,7 +32,8 @@ int main(){
 
   // pthread_create(&newthread, NULL, myturn, &v);
   pthread_create(&newthread, NULL, myturn, NULL);
-  //myturn()
+   
+  //myturn() => Another task
   yourturn()
 
   // wait until the thread is done before we exit.
