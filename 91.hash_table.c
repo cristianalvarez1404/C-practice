@@ -1,4 +1,6 @@
 #include "hash_table.h"
+#include <string.h>
+#include <stdio.h>
 
 typedef struct entry {
   char *key;
@@ -52,7 +54,7 @@ void hash_table_print(hash_table *ht){
 }
 
 bool hash_table_insert(hash_table *ht, const char *key, void *obj){
-  if(key == NULL || obj == NULL) return false;
+  if(key == NULL || obj == NULL || ht == NULL) return false;
   size_t index = hash_table_index(ht, key);
 
   if(hash_table_lookup(ht, key) != NULL) return false;
@@ -70,9 +72,38 @@ bool hash_table_insert(hash_table *ht, const char *key, void *obj){
 }
 
 void *hash_table_lookup(hash_table *ht, const char *key){
+  if(key == NULL || ht == NULL) return false;
+  size_t index = hash_table_index(ht, key);
 
+  entry *tmp = ht->elements[index];
+  while(tmp != NULL && strcmp(tmp->key, key) != 0) {
+    tmp = tmp->next;
+  }
+
+  if(tmp == NULL) return NULL;
+  return tmp->object;
 }
 
 void *hash_table_delete(hash_table *ht, const char *key){
+  if(key == NULL || ht == NULL) return false;
+  size_t index = hash_table_index(ht, key);
 
+  entry *tmp = ht->elements[index];
+  entry *prev = NULL;
+  while(tmp != NULL && strcmp(tmp->key, key) != 0) {
+    prev = tmp;
+    tmp = tmp->next;
+  }
+
+  if(tmp == NULL) return NULL;
+  if(prev == NULL) {
+    //deleting the head of the list
+    ht->elements[index] = tmp->next;
+  } else {
+    //deleting from somewhere not the head
+    prev->next = tmp->next;
+  }
+  void *result = tmp->object;
+  free(tmp);
+  return result;
 }
