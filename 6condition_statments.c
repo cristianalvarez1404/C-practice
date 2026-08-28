@@ -3,6 +3,8 @@
 int main(){
 
   int x = 42;
+  puts("Enter a number for x: ");
+  scanf("%d", &x);
 
   if(x >= 0 && x < 50) {
     printf("x is in our range\n");
