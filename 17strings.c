@@ -13,7 +13,7 @@ size_t string_length(const char *input){
   return length;
 }
 
-void string_append(char *destination, const char* source){
+char* string_append(char *destination, const char* source){
   //Compute lengths of input and source
   size_t dst_length = string_length(destination);
   size_t src_length = string_length(source);
@@ -38,7 +38,19 @@ void string_append(char *destination, const char* source){
 
   //Add our null terminating character at the end
   new_str[i] = '\0';
-  destination = new_str;
+  
+  return new_str;
+  //destination = new_str;
+}
+
+void string_append2(char* src1, char* src2){
+  size_t src1_len = string_length(src1);
+  size_t src2_len = string_length(src2);
+  size_t len = src1_len + src2_len;
+
+  char* new_string = (char*)realloc(src1,sizeof(char)*(len+1));
+  memcpy(src1 + src1_len,src2,len);
+  new_string[len + 1] = '\0'; 
 }
 
 int main(){
@@ -73,9 +85,20 @@ int main(){
   const char *name3 = "Robert"; // READ ONLY
 
   char name4[] = {'h','e','l','l','o','\0'};
-  string_append(name4, " world!");
+  char* new_name = string_append(name4, " world!");
 
-  printf("%s\n", name4);
+  printf("%s\n", new_name);
+
+  char* name5 = (char*)malloc(sizeof(char) * 6);
+  name5[0] = 'H';
+  name5[1] = 'e';
+  name5[2] = 'l';
+  name5[3] = 'l';
+  name5[4] = 'o';
+  name5[5] = '\0';
+
+  string_append2(name5,"Hi");
+  printf("%s\n",name5);
 
   return 0;
 }
