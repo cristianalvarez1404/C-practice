@@ -28,7 +28,7 @@ int main(void)
     */
 
     printf("%d\n", add_int(1, 2));
-    printf("%.3f\n", add_float(1.12, 2.34));
+    printf("%.3f\n", add_float(1.12, 2.34));    
     printf("%ld\n", add_long(1L, 2214645L));
 
     return 0;
